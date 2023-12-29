@@ -10,7 +10,7 @@ const router = express.Router()
 
 
 
-// New
+// SimCart
 router.post("/sim-cards/new", async (req, res, next) => {
     try {
         const data = req.body
@@ -34,9 +34,6 @@ router.post("/sim-cards/new", async (req, res, next) => {
     }
 })
 
-
-
-// Update
 router.put("/sim-cards/update", async (req, res, next) => {
     try {
         const { simCardID } = req.body
@@ -62,9 +59,6 @@ router.put("/sim-cards/update", async (req, res, next) => {
     }
 })
 
-
-
-// Delete 
 router.delete("/sim-cards/delete", async (req, res, next) => {
     try {
         const { simCardID } = req.body
@@ -80,9 +74,6 @@ router.delete("/sim-cards/delete", async (req, res, next) => {
     }
 })
 
-
-
-// Get All
 router.get("/sim-cards", async (req, res, next) => {
     try {
         const pageNumber =
@@ -160,11 +151,14 @@ router.get("/sim-cards", async (req, res, next) => {
 
 
 
-// خرید های ما از مشتری
-router.get("/buy-orders/:pageNumber", async (req, res, next) => {
+// فروش های ما به مشتری
+router.get("/buy-orders", async (req, res, next) => {
     try {
-        const pageNumber = parseInt(req.params.pageNumber) || 1; // Extract page number from URL params, default to 1 if not provided
-        const itemsPerPage = 10; // Set the number of items per page
+
+        const pageNumber =
+            parseInt(req.query.pageNumber) ? parseInt(req.query.pageNumber) : 1;
+
+        const itemsPerPage = 10;
 
         const paginatedOrders = await paginateQuery(BuyOrderMode, pageNumber, itemsPerPage);
 
@@ -174,8 +168,7 @@ router.get("/buy-orders/:pageNumber", async (req, res, next) => {
     }
 });
 
-
-// فروش های ما به مشتری
+// خرید های ما از مشتری
 router.get("/sell-orders/:pageNumber", async (req, res, next) => {
     try {
         const pageNumber = parseInt(req.params.pageNumber) || 1; // Extract page number from URL params, default to 1 if not provided

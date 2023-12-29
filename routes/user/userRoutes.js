@@ -21,6 +21,7 @@ router.post("/buy-orders/new", async (req, res, next) => {
         const { simCardID, paymanyMethod } = req.body
 
 
+       
 
 
         if (!simCardID || simCardID === null) throw ("simCardID Required.")
@@ -38,6 +39,7 @@ router.post("/buy-orders/new", async (req, res, next) => {
 
         const newBuyOrder = new BuyOrderModel(
             {
+                userEmail: user.email,
                 simCardID: simCard._id,
                 paymentMethod: paymanyMethod,
                 userID: user._id,

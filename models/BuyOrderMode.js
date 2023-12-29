@@ -1,9 +1,22 @@
 const mongoose = require("mongoose");
 
+const status = [
+    "منتظر پرداخت" ,
+    "موفق" ,
+    "ناموفق" ,
+    "مشکل فنی"
+]
+
+
+
 const BuyOrderModel = new mongoose.Schema({
     userID: {
         type: mongoose.Schema.ObjectId,
         required: [true, "Please Enter buyerID."],
+    },
+    userEmail: {
+        type: String,
+        required: [true, "Please Enter User Email."],
     },
     simCardID: {
         type: mongoose.Schema.ObjectId,
@@ -19,7 +32,7 @@ const BuyOrderModel = new mongoose.Schema({
     },
     status: {
         type: String,
-        default: "waiting"
+        default: status[0]
     }
 
 },
