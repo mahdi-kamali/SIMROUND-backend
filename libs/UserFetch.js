@@ -15,7 +15,9 @@ const fetchUser = async (token) => {
 
         const user = await UserModel.findOne({
             email: tokenUser.email
-        })
+        }).select("-password ")
+
+        
 
 
         return user

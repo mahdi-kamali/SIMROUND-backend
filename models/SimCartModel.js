@@ -40,41 +40,58 @@ const SimCardModel = new mongoose.Schema({
         type: Number,
         required: [true, "Please Enter price."]
     },
-
-    sellerID: {
-        type: mongoose.Schema.ObjectId,
-        required: [true, "Please Enter sellerID."]
-    },
-
-    activationDate: Date,
-
-    isActivated: {
-        type: Boolean,
-        default: true
-    },
-    operatorName: {
-        type: String,
-        required: [true, "Please Enter Operator Name."]
-    },
-
-    simCardUsageState: {
-        type: String,
-        default: simcartUsedTypes[0]
-    },
-    ghesti: {
-        type: Boolean,
-        default: false
+    maxGhestCount: {
+        type: Number,
+        default: 0
     },
     pish: {
         type: Number,
         default: 0
     },
+    sellerID: {
+        type: mongoose.Schema.ObjectId,
+        required: [true, "Please Enter sellerID."]
+    },
+    label: {
+        type: String,
+        required: [true, "Please Enter label"]
+    },
+    description: {
+        type: String,
+        default: null
+    },
+    readingType: {
+        type: String,
+        required: [true, "Please Enter readingType"]
+    },
+    operatorName: {
+        type: String,
+        required: [true, "Please Enter Operator Name."]
+    },
+    simCardUsageState: {
+        type: String,
+        default: simcartUsedTypes[0]
+    },
+    activationDate: {
+        type: Date,
+        default: null
+    },
+    isActivated: {
+        type: Boolean,
+        default: false
+    },
+    ghesti: {
+        type: Boolean,
+        default: false
+    },
     vaziat: {
         type: Boolean,
         default: false
-    }
-
-
+    },
+    isVIP: {
+        type: Boolean,
+        default: false
+    },
 },
     {
         timestamps: true

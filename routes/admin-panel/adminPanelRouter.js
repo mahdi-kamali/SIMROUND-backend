@@ -16,9 +16,11 @@ router.post("/sim-cards/new", async (req, res, next) => {
         const data = req.body
         const { ghesti, vaziat } = req.body
 
-        data.ghesti = ghesti === "on"
-        data.vaziat = vaziat === "on"
+        data.ghesti = ghesti === "on" || data.ghesti  === "true"
+        data.vaziat = vaziat === "on" || data.vaziat === "true"
 
+
+      
 
         const seller = await fetchUser(req.headers.token)
 
