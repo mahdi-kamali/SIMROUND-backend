@@ -36,6 +36,10 @@ const SimCardModel = new mongoose.Schema({
             }
         ]
     },
+    khanaei: {
+        type : String , 
+        required : [true , "Please Enter khanaei"]
+    },
     price: {
         type: Number,
         required: [true, "Please Enter price."]
@@ -47,6 +51,10 @@ const SimCardModel = new mongoose.Schema({
     pish: {
         type: Number,
         default: 0
+    },
+    seller: {
+        type: Number,
+        required: [true, "Please Enter seller"]
     },
     sellerID: {
         type: mongoose.Schema.ObjectId,
@@ -68,10 +76,6 @@ const SimCardModel = new mongoose.Schema({
         type: String,
         required: [true, "Please Enter Operator Name."]
     },
-    simCardUsageState: {
-        type: String,
-        default: simcartUsedTypes[0]
-    },
     activationDate: {
         type: Date,
         default: null
@@ -85,8 +89,8 @@ const SimCardModel = new mongoose.Schema({
         default: false
     },
     vaziat: {
-        type: Boolean,
-        default: false
+        type: String,
+        default: simcartUsedTypes[0]
     },
     isVIP: {
         type: Boolean,

@@ -39,7 +39,7 @@ router.post("/login", async (req, res, next) => {
             userData,
             TOKEN,
             {
-                expiresIn: "1d"
+                expiresIn: "1w"
             }
         )
 

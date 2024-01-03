@@ -14,13 +14,16 @@ const router = express.Router()
 router.post("/sim-cards/new", async (req, res, next) => {
     try {
         const data = req.body
-        const { ghesti, vaziat } = req.body
-
-        data.ghesti = ghesti === "on" || data.ghesti  === "true"
-        data.vaziat = vaziat === "on" || data.vaziat === "true"
 
 
-      
+        const { ghesti, isActivated, isVIP } = req.body
+
+        data.ghesti = ghesti === "on" || data.ghesti === "true"
+        data.isActivated = isActivated === "on" || data.isActivated === "true"
+        data.isVIP = isVIP === "on" || data.isVIP === "true"
+
+
+
 
         const seller = await fetchUser(req.headers.token)
 
@@ -38,11 +41,11 @@ router.post("/sim-cards/new", async (req, res, next) => {
 
 router.put("/sim-cards/update", async (req, res, next) => {
     try {
-        const { simCardID } = req.body
+        const { _id } = req.body
         const data = req.body
 
 
-        const simCard = await SimCartModel.findByIdAndUpdate(simCardID, {
+        const simCard = await SimCartModel.findByIdAndUpdate(_id, {
             ...data,
         }
 
@@ -150,6 +153,18 @@ router.get("/sim-cards", async (req, res, next) => {
         next(err);
     }
 });
+
+
+
+
+router.post("/sim-cards/new-import" , async (req, res, next) => {
+    try {
+        return res.json("ok")
+     }
+    catch (e) {
+        return next(e)
+    }
+})
 
 
 

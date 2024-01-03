@@ -23,7 +23,7 @@ const app = express()
 // Express Uses
 app.use(bodyParse.json());
 app.use(bodyParse.urlencoded({ extended: true }));
-app.use(upload.array());
+app.use(upload.any());
 app.use(express.static('public'));
 app.use(cors())
 
