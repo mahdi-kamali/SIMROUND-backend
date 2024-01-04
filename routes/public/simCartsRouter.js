@@ -1,79 +1,99 @@
-
-const express = require("express")
-const SimCartModel = require("../../models/SimCartModel")
-const { paginateQuery } = require("../../libs/paginateQuery")
-const router = express.Router()
-
-
+const express = require("express");
+const SimCartModel = require("../../models/SimCartModel");
+const { paginateQuery } = require("../../libs/paginateQuery");
+const router = express.Router();
 
 router.post("/sim-carts", async (req, res, next) => {
-    try {
-        const pageNumber = parseInt(req.query.pageNumber);
-        const {
-            priceMin = 0,
-            priceMax = 99999999999,
-            digits = `9*********`,
-            simCardUsageState = "all",
-            ghesti = false,
-            operatorName = "all"
-        } = req.query;
+  try {
+    const pageNumber = parseInt(req.query.pageNumber);
+    const {
+      priceMin = 0,
+      priceMax = 99999999999,
+      digits = `9*********`,
+      vaziat = "all",
+      ghesti = false,
+      operatorName,
+      readingType = "all",
+      maxGhestCount = "all",
+      pish = "all",
+      seller = "all",
+      label = "all",
+      description = "all",
+      activationDate = "all",
+      isActivated = "all",
+      isVIP = "all",
+      sellerID = "all",
+      createdAt = "all",
+      updatedAt = "all",
+    } = req.query;
 
-        let numbersQuery = {
-            $gte: 9374905487,
-            $lte: 9374905487
-        };
+    const data = req.query
 
-        const minDigit = `${digits}`.replaceAll("*", "0");
-        const maxDigit = `${digits}`.replaceAll("*", "9");
-        numbersQuery = {
-            $gte: parseInt(minDigit),
-            $lte: parseInt(maxDigit)
-        };
+    // return res.json(readingType)
 
-        const priceQuery = {
-            $gte: priceMin,
-            $lte: priceMax
-        };
+    let numbersQuery = {
+      $gte: 9374905487,
+      $lte: 9374905487,
+    };
 
-        let simCardUsageStateQuery = {
-            $ne: "all"
-        };
+    const minDigit = `${digits}`.replaceAll("*", "0");
+    const maxDigit = `${digits}`.replaceAll("*", "9");
+    numbersQuery = {
+      $gte: parseInt(minDigit),
+      $lte: parseInt(maxDigit),
+    };
 
-        if (simCardUsageState !== "all") {
-            simCardUsageStateQuery = simCardUsageState;
-        }
+    const priceQuery = {
+      $gte: priceMin,
+      $lte: priceMax,
+    };
 
-        let simCardOperatorQuery = {};
+    let vaziatQuery = {
+      $ne: "all",
+    };
 
-        if (operatorName !== "all") {
-            simCardOperatorQuery = { operatorName };
-        }
-
-        const simCards = await paginateQuery(
-            SimCartModel,
-            pageNumber,
-            30,
-            {
-                price: priceQuery,
-                numbers: numbersQuery,
-                simCardUsageState: simCardUsageStateQuery,
-                ghesti: ghesti ? ghesti : { $ne: undefined },
-                ...simCardOperatorQuery,
-            }
-        );
-
-        return res.json(simCards);
-    } catch (err) {
-        next(err);
+    if (vaziat !== "all") {
+      vaziatQuery = vaziat;
     }
+
+    let simCardOperatorQuery = {
+      $ne: "all",
+    };
+
+    if (operatorName !== "all") {
+      simCardOperatorQuery = { operatorName };
+    }
+
+    const readingTypeQuery = {};
+
+    
+
+    // const simCards = await paginateQuery(SimCartModel, pageNumber, 30, {
+    //   price: priceQuery,
+    //   numbers: numbersQuery,
+    //   vaziat: vaziatQuery,
+    //   ghesti: ghesti ? ghesti : { $ne: undefined },
+    //   operatorName: operatorName ? operatorName : { $ne: "all" },
+    // });
+
+
+    delete data.pageNumber
+    delete data.digits
+    delete data.priceMin
+    delete data.priceMax
+    data.price = priceQuery 
+    data.numbers = numbersQuery
+    console.log(data)
+
+    const simCards = await paginateQuery(SimCartModel, pageNumber, 30, {
+        ...data ,
+
+      });
+
+    return res.json(simCards);
+  } catch (err) {
+    next(err);
+  }
 });
 
-
-
-
-
-
-
-
-
-module.exports = router
+module.exports = router;
