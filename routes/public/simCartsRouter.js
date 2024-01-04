@@ -11,20 +11,7 @@ router.post("/sim-carts", async (req, res, next) => {
       priceMax = 99999999999,
       digits = `9*********`,
       vaziat = "all",
-      ghesti = false,
       operatorName,
-      readingType = "all",
-      maxGhestCount = "all",
-      pish = "all",
-      seller = "all",
-      label = "all",
-      description = "all",
-      activationDate = "all",
-      isActivated = "all",
-      isVIP = "all",
-      sellerID = "all",
-      createdAt = "all",
-      updatedAt = "all",
     } = req.query;
 
     const data = req.query
@@ -48,25 +35,8 @@ router.post("/sim-carts", async (req, res, next) => {
       $lte: priceMax,
     };
 
-    let vaziatQuery = {
-      $ne: "all",
-    };
 
-    if (vaziat !== "all") {
-      vaziatQuery = vaziat;
-    }
 
-    let simCardOperatorQuery = {
-      $ne: "all",
-    };
-
-    if (operatorName !== "all") {
-      simCardOperatorQuery = { operatorName };
-    }
-
-    const readingTypeQuery = {};
-
-    
 
     // const simCards = await paginateQuery(SimCartModel, pageNumber, 30, {
     //   price: priceQuery,
@@ -83,7 +53,6 @@ router.post("/sim-carts", async (req, res, next) => {
     delete data.priceMax
     data.price = priceQuery 
     data.numbers = numbersQuery
-    console.log(data)
 
     const simCards = await paginateQuery(SimCartModel, pageNumber, 30, {
         ...data ,
