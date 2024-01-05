@@ -9,6 +9,10 @@
 function formatErrorMessages(err) {
     const formattedErrors = [];
 
+
+    // return err
+
+
     if (err?.errors) {
         Object.entries(err.errors).forEach((item) => {
             formattedErrors.push(item[1].message)
