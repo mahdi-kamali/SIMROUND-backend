@@ -137,24 +137,45 @@ router.post("/sim-cards/xlsx/file-import", async (req, res, next) => {
 router.get("/sim-cards/xlsx/file-export", async (req, res, next) => {
   try {
     const simCards = await SimCartModel.find();
-    const columnNames = Object.keys(SimCartModel.schema.paths);
-    const ws = XLSX.utils.aoa_to_sheet([columnNames, columnNames]);
+    const headersName = Object.keys(SimCartModel.schema.paths);
+
+    const allRecordsRow = simCards.map((item) => {
+      const newRecord = headersName.map((columnItem) => {
+        let test = item[columnItem];
+        if (columnItem === "_id") {
+          test = item.id;
+        }
+        return test;
+      });
+
+      return newRecord;
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet([headersName, ...allRecordsRow]);
+
+    const headersByIndex = Object.keys(ws);
+
+    headersName.map((item, index) => {
+      const column = ws[headersByIndex[index]];
+      column.c = [];
+      const comments = {
+        t: "شماره سیمکارت",
+      };
+      column.c.push(comments);
+    });
+
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    const file = await XLSX.writeFile(wb, "files/simcards.xlsx", {
+    await XLSX.writeFile(wb, "files/simcards.xlsx", {
       bookType: "xlsx",
       bookSST: false,
       type: "buffer",
     });
 
     // Read the file as base64 string
-    const fileData = fs
-      .readFileSync("./files/simcards.xlsx")
-      .toString("base64");
+    const file = fs.readFileSync("./files/simcards.xlsx").toString("base64");
 
-    res.send(fileData);
-
-    res.send(fileData);
+    res.send(file);
   } catch (e) {
     console.log(e);
     return next(e);
