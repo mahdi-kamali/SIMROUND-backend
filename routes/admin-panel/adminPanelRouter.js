@@ -10,6 +10,7 @@ const router = express.Router();
 const XLSX = require("xlsx");
 const fs = require("fs");
 const path = require("path");
+const { formatErrorMessages } = require("../../libs/ErrorHandler");
 
 // SimCart
 router.post("/sim-cards/new", async (req, res, next) => {
@@ -128,11 +129,70 @@ router.get("/sim-cards", async (req, res, next) => {
 
 router.post("/sim-cards/xlsx/file-import", async (req, res, next) => {
   try {
-    return res.json("ok");
+    const seller = await fetchUser(req.headers.token);
+    const records = req.body;
+    records.forEach((item) => {
+      delete item._id;
+      item.sellerID = seller._id;
+    });
+
+    const simCardsPromises = records.map(async (item, index) => {
+      const newSimCard = await new SimCartModel(item);
+      try {
+        await newSimCard.save();
+        return {
+          status: "success",
+          index: index,
+          simCard: item,
+          reason: "سیمکارت جدید اضافه شده ",
+
+        };
+      } catch (err) {
+        return {
+          status: "failed",
+          index: index,
+          simCard: item,
+          reason: formatErrorMessages(err),
+        };
+      }
+    });
+
+    const simCards = await Promise.all(simCardsPromises);
+
+    return res.json(simCards);
   } catch (e) {
     return next(e);
   }
 });
+
+// تابع ترجمه به فارسی
+function translateToPersian(englishName) {
+  const translations = {
+    numbers: "شماره سیمکارت",
+    khanaei: "خانه‌ای",
+    price: "قیمت",
+    maxGhestCount: "تعداد اقساط حداکثر",
+    pish: "پیش",
+    seller: "فروشنده",
+    sellerID: "شناسه فروشنده",
+    label: "برچسب",
+    description: "توضیحات",
+    readingType: "نوع خواندن",
+    operatorName: "نام اپراتور",
+    activationDate: "تاریخ فعالسازی",
+    isActivated: "فعال شده",
+    ghesti: "قسطی",
+    vaziat: "وضعیت",
+    isVIP: "ویژه",
+    _id: "شناسه",
+    createdAt: "تاریخ ایجاد",
+    updatedAt: "تاریخ به‌روزرسانی",
+    __v: "نسخه",
+    // ادامه ترجمه برای ستون‌های دیگر
+  };
+
+  return translations[englishName] || englishName;
+}
 
 router.get("/sim-cards/xlsx/file-export", async (req, res, next) => {
   try {
@@ -155,11 +215,11 @@ router.get("/sim-cards/xlsx/file-export", async (req, res, next) => {
 
     const headersByIndex = Object.keys(ws);
 
-    headersName.map((item, index) => {
+    headersName.forEach((item, index) => {
       const column = ws[headersByIndex[index]];
       column.c = [];
       const comments = {
-        t: "شماره سیمکارت",
+        t: translateToPersian(item),
       };
       column.c.push(comments);
     });

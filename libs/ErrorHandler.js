@@ -35,4 +35,4 @@ const ErrorHandler = (err, req, res, next) => {
     return res.status(500).json(formatErrorMessages(err));
 }
 
-module.exports = { ErrorHandler };
+module.exports = { ErrorHandler , formatErrorMessages };

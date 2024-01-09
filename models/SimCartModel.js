@@ -59,7 +59,7 @@ const SimCardModel = new mongoose.Schema(
     },
     readingType: {
       type: String,
-      required: [true, "لطفاً نوع خواندن را وارد کنید"],
+      default : "عادی"
     },
     operatorName: {
       type: String,
@@ -72,10 +72,22 @@ const SimCardModel = new mongoose.Schema(
     isActivated: {
       type: Boolean,
       default: false,
+      set: function (value) {
+        if (typeof value === 'string') {
+          return value === 'on';
+        }
+        return value;
+      },
     },
     ghesti: {
       type: Boolean,
       default: false,
+      set: function (value) {
+        if (typeof value === 'string') {
+          return value === 'on';
+        }
+        return value;
+      },
     },
     vaziat: {
       type: String,
@@ -84,6 +96,12 @@ const SimCardModel = new mongoose.Schema(
     isVIP: {
       type: Boolean,
       default: false,
+      set: function (value) {
+        if (typeof value === 'string') {
+          return value === 'on';
+        }
+        return value;
+      },
     },
   },
   {
